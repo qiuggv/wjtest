@@ -1,0 +1,68 @@
+server:
+    port: 8777
+
+spring:
+    datasource:
+        url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: root
+        driver-class-name: com.mysql.jdbc.Driver
+    application:
+        name: ctg-myapp-wjtest
+    cloud:
+        zookeeper:
+            enabled: false
+            connectString: ${DEVOPS_ZK_CONNECT_STRING}
+            discovery:
+                register: false
+                instance-host: ${DEVOPS_CONTAINER_IP:${KETTY_IP}}
+                instance-port: ${server.port}
+                instance-id: ${spring.cloud.zookeeper.discovery.instance-host}:${spring.cloud.zookeeper.discovery.instance-port}
+
+swagger:
+    group: Controller
+    basePackage: com.myapp.wjtest.controller
+    title: ctg-myapp-wjtest RESTful APIs
+    description: ctg-myapp-wjtest RESTful API
+    version: 1.0.0-SNAPSHOT
+    openApi:
+        group: OpenApi
+        basePackage: com.myapp.wjtest.controller
+        title: ctg-myapp-wjtest Open APIs
+        description: ctg-myapp-wjtest Open API
+        version: 1.0.0-SNAPSHOT
+
+# 配置feign超时时间
+feign:
+    client:
+        config:
+            default:
+                connectTimeout: 10000
+                readTimeout: 30000
+    hystrix:
+        enabled: true
+
+# 配置hystrix禁用超时
+hystrix:
+    command:
+        default:
+            execution:
+                timeout:
+                    enabled: false
+
+# mybatis
+mybatis:
+    type-aliases-package: com.myapp.wjtest.entity
+    mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath:dao/*.xml
+    configuration:
+        map-underscore-to-camel-case: true
+
+# mybatis分页
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    rowBoundsWithCount: true
+    offsetAsPageNum: true
+

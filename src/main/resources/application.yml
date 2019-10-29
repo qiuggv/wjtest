@@ -1,0 +1,5 @@
+# default profile, 与环境无关
+spring:
+    profiles:
+        active: dev
+
